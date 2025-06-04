@@ -1,15 +1,19 @@
-from flask import Flask, render_template, url_for, flash, redirect, request
-from flask_sqlalchemy import SQLAlchemy
-from config import Config
+import os
 from forms import RegistrationForm, LoginForm
+from flask import Flask, render_template, url_for, flash, redirect, request
+from config import Config
 from passlib.hash import pbkdf2_sha256 as hasher
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
+from flask_wtf.csrf import CSRFProtect
+from models import User, Message
+from extensions import db
 
 app = Flask(__name__)
+
 # Arquivo config.py
-app.config.from_object(Config)  
-# Inicializa DB
-db = SQLAlchemy(app) 
+app.config.from_object(Config)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'instance', 'site.db')
+csrf = CSRFProtect(app) 
 
 # Config Flask login
 login_manager = LoginManager(app)
@@ -20,34 +24,7 @@ login_manager.login_message_category = 'info'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Modelo do Banco de Dados
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique = True, nullable = False)
-    password = db.Column(db.String(60), nullable = False) 
-    role = db.Column(db.String(10), nullable = False, default = 'jogador') # 'jogador' ou 'anjo'
-
-    # Anjo pode enviar diversas menssagens 
-    sent_messages = db.relationship('Message', foreign_keys = ['Message.sender_id'], backref = 'sender', lazy=True)
-    # Jgador pode receber diversas menssagens 
-    received_messages = db.relationship('Message', foreign_keys = ['Message.receiver_id'], backref = 'receiver', lazy=True)
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.role}')"
-
-class Message(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    # ID do anjo
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    # ID do jogador
-    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    # Conteúdo da mensagem
-    content = db.Column(db.Text, nullable = False)
-    # Data e hora da mensagem
-    timestamp = db.Column(db.DateTime, nullable = False, default = db.func.now())
-
-    def __repr__(self):
-        return f"Message('{self.content[:20]}...', 'De: {self.sender_id}', 'Para: {self.receiver_id}')"
+db.init_app(app)
 
 # Rotas
 @app.route('/')
