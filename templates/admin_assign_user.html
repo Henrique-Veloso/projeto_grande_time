@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="mt-5 mb-4">Atribuir Anjos a Protegidos</h2>
+    <p class="lead">Utilize este formulário para definir qual Anjo será responsável por qual Protegido.</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Nova Atribuição</h4>
+        </div>
+        <div class="card-body">
+            {% if form.anjo_id.choices and form.jogador_id.choices %}
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.anjo_id.label(class="form-label") }}
+                        {{ form.anjo_id(class="form-select") }}
+                        {% for error in form.anjo_id.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.jogador_id.label(class="form-label") }}
+                        {{ form.jogador_id(class="form-control") }}
+                        {% for error in form.jogador_id.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    Certifique-se de que existem usuários do tipo 'Anjo' e 'Protegido' cadastrados antes de fazer atribuições.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Atribuições Existentes</h4>
+        </div>
+        <div class="card-body">
+            {% if existing_assignments %}
+                <ul class="list-group">
+                    {% for assignment in existing_assignments %}
+                        <li class="list-group-item">
+                            Anjo: <strong>{{ assignment.anjo.username }}</strong> &rarr; Protegido: <strong>{{ assignment.protegido.username }}</strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Nenhuma atribuição encontrada.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

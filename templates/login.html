@@ -6,9 +6,9 @@
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">
-                    {{ form.username.label(class="form-label") }}
-                    {{ form.username(class="form-control", placeholder="Seu nome de usuário") }}
-                    {% for error in form.username.errors %}
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control", placeholder="Seu email") }} 
+                    {% for error in form.email.errors %}
                         <div class="text-danger">{{ error }}</div>
                     {% endfor %}
                 </div>
@@ -23,7 +23,8 @@
                     {{ form.submit(class="btn btn-primary") }}
                 </div>
             </form>
-            <p class="text-center mt-3">Não tem uma conta? <a href="{{ url_for('register') }}">Cadastrar</a></p>
+            <p class="text-center mt-3"><a href="{{ url_for('forgot_password') }}">Esqueci minha senha</a></p>
+            <p class="text-center mt-3">Acesso restrito para administradores ou para criar usuários: <a href="{{ url_for('admin_create_user') }}">Criar usuários</a></p>
         </div>
     </div>
 {% endblock content %}

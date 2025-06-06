@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="mt-5 mb-4">Bem-vindo, Administrador {{ current_user.username }}!</h2>
+    <p class="lead">Aqui você pode gerenciar a plataforma e enviar mensagens para o chat geral.</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Enviar Mensagem para o Chat Geral</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.content.label(class="form-label") }}
+                    {{ form.content(class="form-control", rows=3, placeholder="Digite sua mensagem para todos...") }}
+                    {% for error in form.content.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Últimas Mensagens do Chat Geral</h4>
+        </div>
+        <div class="card-body">
+            {% if general_messages %}
+                <div class="list-group">
+                    {% for message in general_messages %}
+                        <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">De: {{ message.sender_gc.username }} (Administrador)</h6>
+                                <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
+                            </div>
+                            <p class="mb-1">{{ message.content }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Nenhuma mensagem no chat geral ainda.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-4" role="alert">
+        <p>Como administrador, você também pode:</p>
+        <ul>
+            <li><a href="{{ url_for('admin_create_user') }}">Criar novos usuários (Administradores, Anjos, Protegidos)</a></li>
+            <li><a href="{{ url_for('admin_assign_user') }}">Atribuir Anjos a Protegidos</a></li>
+        </ul>
+    </div>
+{% endblock content %}

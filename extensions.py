@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail 
 
-# Instância db criada sem estar ligada ao app 
-db = SQLAlchemy() 
+db = SQLAlchemy()
+mail = Mail() 
