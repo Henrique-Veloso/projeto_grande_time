@@ -9,7 +9,7 @@ from flask import current_app
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     # Papéis: 'admin', 'anjo', 'protegido'
     role = db.Column(db.String(10), nullable=False, default='protegido')
     must_change_password = db.Column(db.Boolean, default=True, nullable=False)

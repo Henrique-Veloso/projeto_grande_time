@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, url_for, flash, redirect, request
 from config import Config
-from passlib.hash import pbkdf2_sha256 as hasher
+from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
 from flask_wtf.csrf import CSRFProtect
 from extensions import db, mail 
@@ -36,7 +36,6 @@ def send_reset_email(user):
                       recipients=[user.email])
     msg.body = f'''Para redefinir sua senha, visite o seguinte link:
 {url_for('reset_token', token=token, _external=True)}
-
 Se você não solicitou esta redefinição, por favor, ignore este e-mail e sua senha atual permanecerá inalterada.
 '''
     try:
@@ -60,7 +59,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email = form.email.data).first() 
-        if user and hasher.verify(form.password.data, user.password):
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             flash('Login bem-sucedido!', 'success')
             if user.must_change_password:
@@ -85,7 +84,7 @@ def change_password():
 
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        if not hasher.verify(form.old_password.data, current_user.password):
+        if not check_password_hash(current_user.password, form.old_password.data):
             flash('Senha antiga incorreta.', 'danger')
             return render_template('change_password.html', title='Alterar Senha', form=form)
 
