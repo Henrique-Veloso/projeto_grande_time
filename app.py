@@ -269,12 +269,12 @@ def admin_assign_user():
                            existing_assignments=existing_assignments)
 
 if __name__ == '__main__':
-    with app.app_context():
-        admin_user_exists = User.query.filter_by(username='superadmin').first()
-        if not admin_user_exists:
-            hashed_admin_pass = hasher.hash('superadmin123') 
-            superadmin = User(username='superadmin', email='email_admin@exemplo.com', password=hashed_admin_pass, role='admin', must_change_password=True)
-            db.session.add(superadmin)
-            db.session.commit()
+    # with app.app_context():
+    #     admin_user_exists = User.query.filter_by(username='superadmin').first()
+    #     if not admin_user_exists:
+    #         hashed_admin_pass = hasher.hash('superadmin123') 
+    #         superadmin = User(username='superadmin', email='email_admin@exemplo.com', password=hashed_admin_pass, role='admin', must_change_password=True)
+    #         db.session.add(superadmin)
+    #         db.session.commit()
             
     app.run(debug=True)
