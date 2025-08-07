@@ -1,91 +1,89 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2 class="mt-5 mb-4">Bem-vindo, Anjo {{ current_user.username }}!</h2>
-    <p class="lead">Aqui você pode se comunicar com seus protegidos e ver o chat geral.</p>
+    <h2 class="mt-5 mb-2 text-center">Bem-vindo, Anjo {{ current_user.username }}!</h2>
+    <p class="fs-6 mb-4 text-center">Aqui você pode se comunicar com seus protegidos e ver o chat geral.</p>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Enviar Mensagem para um Protegido</h4>
-                </div>
-                <div class="card-body">
-                    {% if message_form.receiver_id.choices %} {# Verifica se há protegidos atribuídos #}
-                        <form method="POST" action="">
-                            {{ message_form.hidden_tag() }}
-                            <div class="mb-3">
-                                {{ message_form.receiver_id.label(class="form-label") }}
-                                {{ message_form.receiver_id(class="form-select") }}
-                                {% for error in message_form.receiver_id.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ message_form.content.label(class="form-label") }}
-                                {{ message_form.content(class="form-control", rows=5, placeholder="Digite sua mensagem para o protegido...") }}
-                                {% for error in message_form.content.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="d-grid gap-2">
-                                {{ message_form.submit(class="btn btn-primary") }}
-                            </div>
-                        </form>
-                    {% else %}
-                        <div class="alert alert-warning" role="alert">
-                            Você ainda não tem protegidos atribuídos para enviar mensagens.
-                        </div>
-                    {% endif %}
-                </div>
+    <div class="d-flex flex-column align-items-center mb-5" style="gap: 2rem;">
+
+        <div class="card shadow-sm rounded-4 px-4 py-3" style="width: auto; max-width: 100%;">
+            <div class="card-header border-0 bg-white">
+                <h4 class="mb-0">Enviar Mensagem para um Protegido</h4>
             </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Suas Últimas Mensagens Privadas Enviadas</h4>
-                </div>
-                <div class="card-body">
-                    {% if sent_messages_private %}
-                        <div class="list-group">
-                            {% for message in sent_messages_private %}
-                                <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Para: {{ message.receiver.username }}</h6>
-                                        <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </div>
-                                    <p class="mb-1">{{ message.content }}</p>
-                                </div>
+            <div class="card-body p-0 pt-3">
+                {% if message_form.receiver_id.choices %}
+                    <form method="POST" action="">
+                        {{ message_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ message_form.receiver_id.label(class="form-label") }}
+                            {{ message_form.receiver_id(class="form-select") }}
+                            {% for error in message_form.receiver_id.errors %}
+                                <div class="text-danger">{{ error }}</div>
                             {% endfor %}
                         </div>
-                    {% else %}
-                        <p>Você ainda não enviou nenhuma mensagem privada.</p>
-                    {% endif %}
-                </div>
+                        <div class="mb-3">
+                            {{ message_form.content.label(class="form-label") }}
+                            {{ message_form.content(class="form-control", rows=5, placeholder="Digite sua mensagem para o protegido...") }}
+                            {% for error in message_form.content.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-grid gap-2">
+                            {{ message_form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        Você ainda não tem protegidos atribuídos para enviar mensagens.
+                    </div>
+                {% endif %}
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Chat Geral (Apenas Leitura)</h4>
-                </div>
-                <div class="card-body general-chat-area">
-                    {% if general_messages %}
-                        <div class="list-group">
-                            {% for message in general_messages %}
-                                <div class="list-group-item flex-column align-items-start mb-2">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">De: {{ message.sender_gc.username }} (Administrador)</h6>
-                                        <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </div>
-                                    <p class="mb-1">{{ message.content }}</p>
+        <div class="card shadow-sm rounded-4 px-4 py-3" style="width: auto; max-width: 100%;">
+            <div class="card-header border-0 bg-white">
+                <h4 class="mb-0">Suas Últimas Mensagens Privadas Enviadas</h4>
+            </div>
+            <div class="card-body p-0 pt-3">
+                {% if sent_messages_private %}
+                    <div class="list-group">
+                        {% for message in sent_messages_private %}
+                            <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Para: {{ message.receiver.username }}</h6>
+                                    <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>Nenhuma mensagem no chat geral ainda.</p>
-                    {% endif %}
-                </div>
+                                <p class="mb-1">{{ message.content }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Você ainda não enviou nenhuma mensagem privada.</p>
+                {% endif %}
             </div>
         </div>
+
+        <div class="card shadow-sm rounded-4 px-4 py-3" style="width: auto; max-width: 100%;">
+            <div class="card-header border-0 bg-white">
+                <h4 class="mb-0">Chat Geral (Apenas Leitura)</h4>
+            </div>
+            <div class="card-body p-0 pt-3 general-chat-area">
+                {% if general_messages %}
+                    <div class="list-group">
+                        {% for message in general_messages %}
+                            <div class="list-group-item flex-column align-items-start mb-2">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">De: {{ message.sender_gc.username }} (Administrador)</h6>
+                                    <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
+                                </div>
+                                <p class="mb-1">{{ message.content }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Nenhuma mensagem no chat geral ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 {% endblock content %}

@@ -5,8 +5,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'prjt_grn_tm_2025'
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://gt_admin:prjt_grn_tm_2025@localhost:5432/grande_time_db'
-    
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://gt_admin:prjt_grn_tm_2025@localhost:5432/grande_time_db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///meu_banco.db'
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Configurações de E-mail para Flask-Mail

@@ -5,25 +5,41 @@
 {% block content %}
     <div class="text-center mt-5 mb-6">
         <h1>Bem-vindo ao Projeto Anjo!</h1>
-        <p class="lead">Sua plataforma de comunicação anônima entre anjos e jogadores.</p>
+        <p class="lead mb-5">Sua plataforma de comunicação anônima entre anjos e jogadores.</p>
     </div>
 
     <div class="d-flex justify-content-center mb-1 mt-4">
-        <div id="carouselExampleIndicators" class="carousel slide w-75" data-bs-ride="carousel">
+        <div id="carouselExampleIndicators" class="carousel slide w-100" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
             </div>
             <div class="carousel-inner rounded shadow">
                 <div class="carousel-item active">
-                    <img src="{{ url_for('static', filename='img/logo.png') }}" class="d-block w-100" alt="Slide 1">
+                    <img src="{{ url_for('static', filename='img/foto2GT.jpeg') }}" class="d-block w-100" alt="Slide 1">
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ url_for('static', filename='img/logo.png') }}" class="d-block w-100" alt="Slide 2">
+                    <img src="{{ url_for('static', filename='img/foto1GT.jpeg') }}" class="d-block w-100" alt="Slide 2">
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ url_for('static', filename='img/logo.png') }}" class="d-block w-100" alt="Slide 3">
+                    <img src="{{ url_for('static', filename='img/foto3GT.jpeg') }}" class="d-block w-100" alt="Slide 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/foto4GT.jpeg') }}" class="d-block w-100" alt="Slide 4">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/foto5GT.jpeg') }}" class="d-block w-100" alt="Slide 5">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/foto6GT.jpeg') }}" class="d-block w-100" alt="Slide 6">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/foto7GT.jpeg') }}" class="d-block w-100" alt="Slide 7">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

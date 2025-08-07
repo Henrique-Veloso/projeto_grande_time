@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2 class="mt-5 mb-4">Bem-vindo, Protegido {{ current_user.username }}!</h2>
-    <p class="lead">Aqui você pode se comunicar com seu Anjo e ver o chat geral.</p>
+    <h2 class="mt-5 mb-2 text-center">Bem-vindo, Protegido {{ current_user.username }}!</h2>
+    <p class="fs-6 mb-4 text-center">Aqui você pode se comunicar com seu Anjo e ver o chat geral.</p>
 
     <div class="row">
         <div class="col-md-6">
+
+            <!-- Mensagens recebidas do Anjo -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Suas Mensagens do Anjo</h4>
+                    <p class="fs-5 mb-0">Mensagens Recebidas do seu Anjo</p>
                 </div>
                 <div class="card-body">
                     {% if received_messages_from_anjo %}
@@ -15,7 +17,7 @@
                             {% for message in received_messages_from_anjo %}
                                 <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Mensagem do seu Anjo</h6>
+                                        <h6 class="mb-1">Seu Anjo</h6>
                                         <small class="text-muted">{{ message.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
                                     </div>
                                     <p class="mb-1">{{ message.content }}</p>
@@ -24,18 +26,19 @@
                         </div>
                     {% else %}
                         <div class="alert alert-info" role="alert">
-                            Você ainda não recebeu nenhuma mensagem do seu anjo. Aguarde!
+                            Você ainda não recebeu nenhuma mensagem do seu anjo.
                         </div>
                     {% endif %}
                 </div>
             </div>
 
+            <!-- Enviar mensagem para o Anjo -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Enviar Mensagem para seu Anjo</h4>
+                    <p class="fs-5 mb-0">Enviar Mensagem para seu Anjo</p>
                 </div>
                 <div class="card-body">
-                    {% if current_user.assigned_anjo %} {# Verifica se tem um anjo atribuído #}
+                    {% if current_user.assigned_anjo %}
                         <form method="POST" action="">
                             {{ protegido_message_form.hidden_tag() }}
                             <div class="mb-3">
@@ -45,8 +48,8 @@
                                     <div class="text-danger">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                            <div class="d-grid gap-2">
-                                {{ protegido_message_form.submit(class="btn btn-primary") }}
+                            <div class="d-flex justify-content-end mt-4">
+                                {{ protegido_message_form.submit(class="btn btn-primary rounded-pill px-4") }}
                             </div>
                         </form>
                     {% else %}
@@ -57,9 +60,10 @@
                 </div>
             </div>
 
+            <!-- Mensagens enviadas ao Anjo -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Suas Mensagens Enviadas para o Anjo</h4>
+                    <p class="fs-5 mb-0">Mensagens Enviadas para seu Anjo</p>
                 </div>
                 <div class="card-body">
                     {% if sent_messages_to_anjo %}
@@ -75,18 +79,21 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p>Você ainda não enviou nenhuma mensagem para seu anjo.</p>
+                        <div class="alert alert-info" role="alert">
+                            Você ainda não enviou nenhuma mensagem para seu anjo.
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
 
+        <!-- Chat Geral -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Chat Geral (Apenas Leitura)</h4>
+                    <p class="fs-5 mb-0">Chat Geral (Apenas Leitura)</p>
                 </div>
-                <div class="card-body general-chat-area">
+                <div class="card-body">
                     {% if general_messages %}
                         <div class="list-group">
                             {% for message in general_messages %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2 class="mt-5 mb-4">Atribuir Anjos a Protegidos</h2>
-    <p class="lead">Utilize este formulário para definir qual Anjo será responsável por qual Protegido.</p>
+    <h2 class="mt-5 mb-2 text-center">Atribuir Anjos a Protegidos</h2>
+    <p class="fs-6 mb-4">Utilize este formulário para definir qual Anjo será responsável por qual Protegido.</p>
 
     <div class="card mb-4">
         <div class="card-header">
@@ -12,6 +12,7 @@
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
+                        <i class="bi bi-person-fill me-1"></i>
                         {{ form.anjo_id.label(class="form-label") }}
                         {{ form.anjo_id(class="form-select") }}
                         {% for error in form.anjo_id.errors %}
@@ -19,14 +20,15 @@
                         {% endfor %}
                     </div>
                     <div class="mb-3">
+                        <i class="bi bi-person-fill me-1"></i>
                         {{ form.jogador_id.label(class="form-label") }}
-                        {{ form.jogador_id(class="form-control") }}
+                        {{ form.jogador_id(class="form-select") }}
                         {% for error in form.jogador_id.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
-                    <div class="d-grid gap-2">
-                        {{ form.submit(class="btn btn-primary") }}
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ form.submit(class="btn btn-primary rounded-pill px-4") }}
                     </div>
                 </form>
             {% else %}

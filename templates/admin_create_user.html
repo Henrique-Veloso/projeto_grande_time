@@ -1,53 +1,61 @@
-{# templates/admin_create_user.html #}
 {% extends "base.html" %}
+{% block title %}Criar Usuário - Projeto Anjo{% endblock %}
+
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mt-5 mb-4 text-center">Criar Novo Usuário</h2>
-            <p class="text-center">Utilize este formulário para cadastrar Administradores, Anjos e Protegidos.</p>
+<div class="d-flex justify-content-center mt-5 mb-5">
+    <div class="card shadow-lg border-0 rounded-4" style="width: auto;">
+        <div class="card-body px-5 py-6">
+            <h2 class="text-center mb-2 mt-4">Criar Novo Usuário</h2>
+            <p class="fs-6 text-center mb-4">Formulário para cadastrar Administradores, Anjos e Protegidos.</p>
+
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
+
                 <div class="mb-3">
-                    {# MUDANÇA AQUI: Rótulo e placeholder para apelido #}
                     {{ form.username.label(class="form-label") }}
                     {{ form.username(class="form-control", placeholder="Apelido que aparecerá no chat") }}
                     {% for error in form.username.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
                 </div>
+
                 <div class="mb-3">
-                    {# MUDANÇA AQUI: Rótulo e placeholder para email de login #}
                     {{ form.email.label(class="form-label") }}
                     {{ form.email(class="form-control", placeholder="Email que será usado para login") }}
                     {% for error in form.email.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
                 </div>
+
                 <div class="mb-3">
                     {{ form.password.label(class="form-label") }}
                     {{ form.password(class="form-control", placeholder="Senha inicial") }}
                     {% for error in form.password.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
                 </div>
+
                 <div class="mb-3">
                     {{ form.confirm_password.label(class="form-label") }}
                     {{ form.confirm_password(class="form-control", placeholder="Confirme a senha inicial") }}
                     {% for error in form.confirm_password.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
                 </div>
+
                 <div class="mb-3">
                     {{ form.role.label(class="form-label") }}
                     {{ form.role(class="form-select") }}
                     {% for error in form.role.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
                 </div>
-                <div class="d-grid gap-2">
-                    {{ form.submit(class="btn btn-primary") }}
+
+                <div class="d-flex justify-content-center mt-4 mb-4">
+                    {{ form.submit(class="btn btn-primary rounded-pill px-4") }}
                 </div>
             </form>
         </div>
     </div>
-{% endblock content %}
+</div>
+{% endblock %}

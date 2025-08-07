@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, url_for, flash, redirect, request
 from config import Config
-from werkzeug.security import generate_password_hash, check_password_hash 
+from passlib.hash import pbkdf2_sha256 as hasher
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
 from flask_wtf.csrf import CSRFProtect
 from extensions import db, mail 
@@ -28,7 +28,6 @@ login_manager.login_message_category = 'info'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Funções Auxiliares para E-mail
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = MailMessage('Redefinição de Senha - Projeto Encontro',
@@ -45,8 +44,6 @@ Se você não solicitou esta redefinição, por favor, ignore este e-mail e sua 
         print(f"Erro ao enviar e-mail: {e}")
         return False
 
-# Rotas da Aplicação
-
 @app.route('/')
 @app.route('/home')
 def index():
@@ -59,7 +56,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email = form.email.data).first() 
-        if user and check_password_hash(user.password, form.password.data):
+        if user and hasher.verify(form.password.data, user.password):
             login_user(user)
             flash('Login bem-sucedido!', 'success')
             if user.must_change_password:
@@ -84,7 +81,7 @@ def change_password():
 
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        if not check_password_hash(current_user.password, form.old_password.data):
+        if not hasher.verify(form.old_password.data, current_user.password):
             flash('Senha antiga incorreta.', 'danger')
             return render_template('change_password.html', title='Alterar Senha', form=form)
 
@@ -268,13 +265,17 @@ def admin_assign_user():
                            form=form,
                            existing_assignments=existing_assignments)
 
-if __name__ == '__main__':
-    # with app.app_context():
-    #     admin_user_exists = User.query.filter_by(username='superadmin').first()
-    #     if not admin_user_exists:
-    #         hashed_admin_pass = hasher.hash('superadmin123') 
-    #         superadmin = User(username='superadmin', email='email_admin@exemplo.com', password=hashed_admin_pass, role='admin', must_change_password=True)
-    #         db.session.add(superadmin)
-    #         db.session.commit()
-            
-    app.run(debug=True)
+@app.cli.command("create-admin")
+def create_admin():
+    from passlib.hash import pbkdf2_sha256 as hasher
+
+    username = input("username : ")
+    email = input("email: ")
+    password = input("senha: ")
+
+    hashed_password = hasher.hash(password)
+    admin = User(username=username, email=email, password=hashed_password, role='admin', must_change_password=True)
+
+    db.session.add(admin)
+    db.session.commit()
+    print(f"\nAdmin '{username}' criado com sucesso com a senha '{password}'.")

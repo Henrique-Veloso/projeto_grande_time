@@ -6,7 +6,7 @@
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-body p-5">
-                <h2 class="text-center mb-4">🔐 Login</h2>
+                <h2 class="text-center mb-4">Login</h2>
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
                     
@@ -26,12 +26,12 @@
                         {% endfor %}
                     </div>
 
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary btn-lg rounded-pill") }}
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ form.submit(class="btn btn-primary rounded-pill", style="width: 25%;") }}
                     </div>
                 </form>
 
-                <p class="text-center mt-4">
+                <p class="text-center mt-2 mb-0">
                     <a href="{{ url_for('forgot_password') }}" class="text-decoration-none">
                         Esqueceu sua senha?
                     </a>
