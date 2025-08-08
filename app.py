@@ -166,10 +166,12 @@ def anjo_dashboard():
     if current_user.role != 'anjo':
         flash('Acesso negado. Você não é um anjo.', 'danger')
         return redirect(url_for('dashboard'))
+
     message_form = MessageForm()
     assigned_protegidos_assignments = Assignment.query.filter_by(anjo_id=current_user.id).all()
     message_form.receiver_id.choices = [(a.protegido.id, a.protegido.username) for a in assigned_protegidos_assignments]
-    if message_form.validate_on_submit(): 
+
+    if message_form.validate_on_submit():
         receiver_id = message_form.receiver_id.data
         content = message_form.content.data
         is_assigned = Assignment.query.filter_by(anjo_id=current_user.id, jogador_id=receiver_id).first()
@@ -181,12 +183,26 @@ def anjo_dashboard():
             return redirect(url_for('anjo_dashboard'))
         else:
             flash('Você não pode enviar mensagens para este protegido (não atribuído ou papel inválido).', 'danger')
-    sent_messages_private = Message.query.filter_by(sender_id=current_user.id).order_by(Message.timestamp.desc()).limit(10).all()
+
+    conversations = {}
+    for assignment in assigned_protegidos_assignments:
+        protegido = assignment.protegido
+        protegido_id = protegido.id
+        sent_messages = Message.query.filter_by(sender_id=current_user.id, receiver_id=protegido_id).all()
+        received_messages = Message.query.filter_by(sender_id=protegido_id, receiver_id=current_user.id).all()
+        all_messages_for_protegido = sorted(sent_messages + received_messages, key=lambda msg: msg.timestamp)
+
+        conversations[protegido_id] = {
+            'protegido_info': protegido,
+            'messages': all_messages_for_protegido
+        }
+
     general_messages = GeneralChatMessage.query.order_by(GeneralChatMessage.timestamp.desc()).limit(20).all()
+
     return render_template('anjo_dashboard.html',
                            title='Dashboard Anjo',
                            message_form=message_form,
-                           sent_messages_private=sent_messages_private,
+                           conversations=conversations,
                            general_messages=general_messages)
 
 @app.route('/protegido/dashboard', methods=['GET', 'POST'])
@@ -195,9 +211,11 @@ def protegido_dashboard():
     if current_user.role != 'protegido':
         flash('Acesso negado. Você não é um protegido.', 'danger')
         return redirect(url_for('dashboard'))
+    
     protegido_message_form = ProtegidoMessageForm()
     assigned_anjo_assignment = Assignment.query.filter_by(jogador_id=current_user.id).first()
-    if protegido_message_form.validate_on_submit(): 
+    
+    if protegido_message_form.validate_on_submit():
         if assigned_anjo_assignment:
             anjo_id = assigned_anjo_assignment.anjo_id
             content = protegido_message_form.content.data
@@ -208,18 +226,22 @@ def protegido_dashboard():
             return redirect(url_for('protegido_dashboard'))
         else:
             flash('Você ainda não tem um anjo atribuído para enviar mensagens.', 'warning')
-    received_messages_from_anjo = []
-    sent_messages_to_anjo = []
+
+    conversation_with_anjo = []
     if assigned_anjo_assignment:
-        received_messages_from_anjo = Message.query.filter_by(receiver_id=current_user.id, sender_id=assigned_anjo_assignment.anjo_id).order_by(Message.timestamp.desc()).all()
-        sent_messages_to_anjo = Message.query.filter_by(sender_id=current_user.id, receiver_id=assigned_anjo_assignment.anjo_id).order_by(Message.timestamp.desc()).all()
+        anjo_id = assigned_anjo_assignment.anjo_id
+        sent_messages_to_anjo = Message.query.filter_by(sender_id=current_user.id, receiver_id=anjo_id).all()
+        received_messages_from_anjo = Message.query.filter_by(sender_id=anjo_id, receiver_id=current_user.id).all()
+        conversation_with_anjo = sorted(sent_messages_to_anjo + received_messages_from_anjo, key=lambda msg: msg.timestamp)
+    
     general_messages = GeneralChatMessage.query.order_by(GeneralChatMessage.timestamp.desc()).limit(20).all()
+
     return render_template('protegido_dashboard.html',
                            title='Dashboard Protegido',
                            protegido_message_form=protegido_message_form,
-                           received_messages_from_anjo=received_messages_from_anjo,
-                           sent_messages_to_anjo=sent_messages_to_anjo,
-                           general_messages=general_messages)
+                           conversation_with_anjo=conversation_with_anjo,
+                           general_messages=general_messages,
+                           assigned_anjo_exists=bool(assigned_anjo_assignment))
 
 @app.route('/admin/create_user', methods=['GET', 'POST'])
 @login_required
